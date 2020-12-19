@@ -2,7 +2,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { green, grey, red } from '@material-ui/core/colors';
 
 const primary = { main: green[600] };
-const secondary = { main: grey[50] };
+const secondary = { main: grey[200] };
 const error = { main: red[800] };
 
 export const BACKGROUND_LIGHT = '#43a047';
@@ -17,26 +17,7 @@ const drinkLoggerTheme = createMuiTheme({
     typography: {
         useNextVariants: true,
     },
-    overrides: {
-        // MuiTabs: {
-        //     indicator: {
-        //         height: '0px',
-        //     },
-        // },
-        // MuiButton: {
-        //     root: {
-        //         '&:hover': {
-        //             backgroundColor: grey[400],
-        //             fontWeight: 'bold',
-        //         },
-        //         '&$selected': {
-        //             backgroundColor: grey[600],
-        //             color: grey[300],
-        //             fontWeight: 'bold',
-        //         },
-        //     },
-        // },
-    },
+    overrides: {},
     props: {
         MuiButton: {
             variant: 'contained',

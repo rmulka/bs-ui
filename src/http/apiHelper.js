@@ -5,12 +5,14 @@ export const fetchData = async (url, queryParams = null) => {
     return call(fullUrl)
 }
 
-export const postData = async (url, requestBody = {}, maxRetries = 3) => {
+export const postData = async (url, requestBody = {}, userId = null) => {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)
     };
+
+    if (userId !== null) requestOptions.headers['user_id'] = userId;
 
     return call(url, requestOptions);
 };
