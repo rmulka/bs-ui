@@ -5,7 +5,8 @@ const BASE_URL = process.env.NODE_ENV === 'production' ? API_PROD_BASE : API_LOC
 
 export const RestApiEndpoint = {
     Players: `${BASE_URL}/players`,
-    Games: `${BASE_URL}/games`
+    Games: `${BASE_URL}/games`,
+    PlayerGames: `${BASE_URL}/games/players`
 };
 
 export const WebsocketEndpoint = {

@@ -24,7 +24,7 @@ const GameStatusTypography = styled(Typography)({
 const GameCard = ({ gameId, creatorName, numPlayers, inProgress }) => {
 
     const InProgressText = () => {
-        if (numPlayers >= 8) return (<GameStatusTypography style={{color: 'red'}}>full</GameStatusTypography>)
+        if (numPlayers >= 8) return (<GameStatusTypography style={{color: 'red'}}>Full</GameStatusTypography>)
         if (inProgress) return (<GameStatusTypography style={{color: 'orange'}}>In progress...</GameStatusTypography>)
         return (<GameStatusTypography style={{color: 'green'}}>Open</GameStatusTypography>)
     }
@@ -34,10 +34,7 @@ const GameCard = ({ gameId, creatorName, numPlayers, inProgress }) => {
         : <Button color='primary' onClick={() => console.log(`clicked game ${gameId}`)} variant='contained'>Join Game</Button>;
 
     return (
-        <CustomCard
-            variant='outlined'
-            raised={true}
-        >
+        <CustomCard raised={true}>
             <CardContainer>
                 <Typography variant={'h6'}>{creatorName}'s BS Game</Typography>
                 <Typography>Number of players: {numPlayers}</Typography>

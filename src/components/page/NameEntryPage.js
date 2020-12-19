@@ -7,7 +7,7 @@ import PlayerDataContext from "../../context/PlayerDataContext";
 import { titleFont } from "../../theme/bsTheme";
 import acesPng from "../../images/cards/aces.png";
 import { RestApiEndpoint } from "../../constants/apiConstants";
-import { postData } from "../../http/apiHelper";
+import { postData } from "../../util/apiHelper";
 import { EDIT_PLAYER_INFO } from "../../reducer/playerDataReducer";
 
 const CustomTextTypography = styled(Typography)({
@@ -51,7 +51,7 @@ const NameEntryPage = () => {
         if (nameInputRef.current.value.length > 0) {
             const requestBody = { name: nameInputRef.current.value };
             const result = await postData(RestApiEndpoint.Players, requestBody);
-            playerDataDispatch({ type: EDIT_PLAYER_INFO, action: { playerId: result.data.id, playerName: result.data.name } })
+            playerDataDispatch({ type: EDIT_PLAYER_INFO, playerId: result.data.id, playerName: result.data.name })
             history.push("/games")
         }
     };

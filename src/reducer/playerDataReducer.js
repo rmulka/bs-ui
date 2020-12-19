@@ -1,27 +1,14 @@
 export const EDIT_PLAYER_INFO = 'EDIT_PLAYER_INFO';
-export const JOIN_GAME = 'JOIN_GAME';
-export const LEAVE_GAME = 'LEAVE_GAME';
+export const RESET_PLAYER_DATA = 'RESET_PLAYER_DATA';
+
+export const PLAYER_STORAGE_KEY = 'playerData';
 
 const playerDataReducer = (state, action) => {
     switch (action.type) {
         case EDIT_PLAYER_INFO:
-            return {
-                ...state,
-                playerId: action.playerId,
-                playerName: action.playerName
-            }
-        case JOIN_GAME:
-            return {
-                ...state,
-                inGame: true,
-                gameId: action.gameId
-            }
-        case LEAVE_GAME:
-            return {
-                ...state,
-                inGame: false,
-                gameId: null
-            }
+            return { ...state, playerId: action.playerId, playerName: action.playerName }
+        case RESET_PLAYER_DATA:
+            return { ...state, playerId: null, playerName: null }
         default:
             throw new Error(`Unsupported action ${action.type} in player data reducer`);
     }

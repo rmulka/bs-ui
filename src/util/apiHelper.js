@@ -2,7 +2,7 @@ export const fetchData = async (url, queryParams = null) => {
     const fullUrl = url + (queryParams === null ? "" :
         '?' + Object.entries(queryParams).map((key, value) => key + '=' + value).join('&'));
 
-    return call(fullUrl)
+    return call(fullUrl);
 }
 
 export const postData = async (url, requestBody = {}, userId = null) => {
@@ -17,6 +17,16 @@ export const postData = async (url, requestBody = {}, userId = null) => {
     return call(url, requestOptions);
 };
 
+export const deleteData = async (url, requestBody) => {
+    const requestOptions = {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
+    };
+
+    return call(url, requestOptions);
+}
+
 const call = async (url, requestOptions = undefined) => {
     const state = {
         data: null,
@@ -25,7 +35,7 @@ const call = async (url, requestOptions = undefined) => {
         retries: 0
     };
 
-    return callHelper(state, url, requestOptions)
+    return callHelper(state, url, requestOptions);
 };
 
 const callHelper = async (state, url, requestOptions = undefined, retries = 0, maxRetries = 3) => {
@@ -36,7 +46,7 @@ const callHelper = async (state, url, requestOptions = undefined, retries = 0, m
     } catch (error) {
         if (retries < maxRetries) return callHelper(state, url, requestOptions, retries + 1, maxRetries);
         state.error = true;
-        state.errorReason = error.message
+        state.errorReason = error.message;
     }
 
     return state;
