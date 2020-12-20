@@ -30,6 +30,7 @@ export const deleteData = async (url, requestBody) => {
 const call = async (url, requestOptions = undefined) => {
     const state = {
         data: null,
+        responseCode: null,
         error: false,
         errorReason: null,
         retries: 0
@@ -43,6 +44,7 @@ const callHelper = async (state, url, requestOptions = undefined, retries = 0, m
     try {
         const response = await fetch(url, requestOptions);
         state.data = await response.json();
+        state.responseCode = response.status;
     } catch (error) {
         if (retries < maxRetries) return callHelper(state, url, requestOptions, retries + 1, maxRetries);
         state.error = true;

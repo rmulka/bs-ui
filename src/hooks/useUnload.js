@@ -10,11 +10,11 @@ const useUnload = fn => {
     useEffect(() => {
         const onUnload = cb.current;
 
-        window.addEventListener("beforeunload", onUnload);
+        // window.addEventListener("beforeunload", onUnload);
         window.addEventListener("popstate", onUnload)
 
         return () => {
-            window.removeEventListener("beforeunload", onUnload);
+            // window.removeEventListener("beforeunload", onUnload);
             window.removeEventListener("popstate", onUnload);
         }
     }, []);

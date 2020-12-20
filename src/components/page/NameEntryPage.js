@@ -67,7 +67,6 @@ const NameEntryPage = () => {
             <CustomBox>
                 <TextField
                     label="Enter your name"
-                    placeholder="John Doe"
                     color='secondary'
                     InputProps={{ style: { fontSize: 40, height: 85 } }}
                     InputLabelProps={{ style: { fontSize: 40, height: 100 } }}
