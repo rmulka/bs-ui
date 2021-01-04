@@ -1,12 +1,28 @@
 import React, { useContext, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { Typography, Box } from "@material-ui/core";
+import { styled } from "@material-ui/core/styles";
 
 import useUnload from "../../hooks/useUnload";
 import GameDataContext from "../../context/GameDataContext";
 import PlayerDataContext from "../../context/PlayerDataContext";
 import { deleteData, fetchData } from "../../util/apiHelper";
-import { RestApiEndpoint } from "../../constants/apiConstants";
+import { RestApiEndpoint, WsEndpoint } from "../../constants/apiConstants";
 import { LEAVE_GAME, UPDATE_CURRENT_GAME } from "../../reducer/gameDataReducer";
+import { WebSocketContext } from "../../provider/WebsocketProvider";
+import Loading from "../loading/Loading";
+import Pregame from "./Pregame";
+import usePopState from "../../hooks/usePopState";
+import GameHeader from "../general/GameHeader";
+
+const Container = styled(Box)({
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+})
 
 const Game = () => {
     const history = useHistory();
@@ -14,25 +30,36 @@ const Game = () => {
 
     const { gameDataState, gameDataDispatch } = useContext(GameDataContext);
     const { playerDataState } = useContext(PlayerDataContext);
+    const { sendMessage } = useContext(WebSocketContext);
 
-    useUnload(async e => {
-        e.preventDefault();
+    const isCreator = gameDataState.currentGameData.creator_id === playerDataState.playerId;
+
+    const leaveGame = async () => {
         const requestBody = { player_id: playerDataState.playerId, game_id: gameId };
         await deleteData(RestApiEndpoint.PlayerGames, requestBody);
-        gameDataDispatch({ type: LEAVE_GAME })
-    });
+        gameDataDispatch({ type: LEAVE_GAME });
+    };
+
+    usePopState(async e => {
+        await leaveGame();
+    })
 
     useEffect(() => {
-        const fetch = async () => fetchData(`${RestApiEndpoint.Games}/${gameId}`);
-        const results = fetch()
-        gameDataDispatch({ type: UPDATE_CURRENT_GAME, gameData: results.data });
-    }, [gameDataDispatch, gameId]);
+        sendMessage(WsEndpoint.GameApp(gameId))
+    }, [gameId, sendMessage]);
 
+    if (!gameDataState.gameDataReceived) return <Loading />
+    if (!gameDataState.currentGameData.in_progress) return (
+        <Container>
+            <GameHeader />
+            <Pregame players={gameDataState.currentGameData.players} isCreator={isCreator} gameId={gameId} />
+        </Container>
+    )
     return (
-        <>
-            <p>{gameId}</p>
-            <p>{playerDataState.playerName}</p>
-        </>
+        <Container>
+            <GameHeader />
+            <Typography>{JSON.stringify(gameDataState.currentGameData)}</Typography>
+        </Container>
     )
 };
 

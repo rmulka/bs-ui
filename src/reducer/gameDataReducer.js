@@ -16,11 +16,11 @@ const gameDataReducer = (state, action) => {
         case JOIN_GAME:
             return { ...state, loading: false, startUp: false, inGame: true, currentGameId: action.gameId }
         case UPDATE_CURRENT_GAME:
-            return { ...state, loading: false, startUp: false, inGame: true, currentGameData: action.gameData }
+            return { ...state, loading: false, startUp: false, inGame: true, currentGameData: action.gameData, gameDataReceived: true }
         case LEAVE_GAME:
-            return { ...state, loading: false, startUp: false, inGame: false, currentGameData: {}, currentGameId: null }
+            return { ...state, loading: false, startUp: false, inGame: false, currentGameData: {}, currentGameId: null, gameDataReceived: false }
         case RESET_GAME_DATA:
-            return { ...state, loading: false, startUp: true, allGames: {}, inGame: false, currentGameData: {}, currentGameId: null }
+            return { ...state, loading: false, startUp: true, allGames: {}, inGame: false, currentGameData: {}, currentGameId: null, gameDataReceived: false }
         default:
             throw new Error(`Unsupported action ${action.type} in game data reducer`);
     }

@@ -12,6 +12,7 @@ import { RestApiEndpoint } from "../../constants/apiConstants";
 import Loading from "../loading/Loading";
 import GameCard from "../general/GameCard";
 import useUnload from "../../hooks/useUnload";
+import usePopState from "../../hooks/usePopState";
 
 const Container = styled(Box)({
     width: '70%',
@@ -37,7 +38,7 @@ const GamesPage = () => {
     const { gameDataState, gameDataDispatch } = useContext(GameDataContext);
     const { playerDataState, playerDataDispatch } = useContext(PlayerDataContext);
 
-    useUnload(e => {
+    usePopState(e => {
         e.preventDefault();
         playerDataDispatch({ type: RESET_PLAYER_DATA })
     })
@@ -84,11 +85,11 @@ const GamesPage = () => {
                 {gameDataState.allGames.map((game) => (
                     <Grid key={game.id} item style={{ width: '30%', height: '250px' }}>
                         <GameCard
-                            creatorName={game.creatorName}
+                            creatorName={game.creator_name}
                             playerId={playerDataState.playerId}
                             gameId={game.id}
-                            numPlayers={game.numPlayers}
-                            inProgress={game.inProgress}
+                            numPlayers={game.num_players}
+                            inProgress={game.in_progress}
                             gameDataDispatch={gameDataDispatch}
                         />
                     </Grid>

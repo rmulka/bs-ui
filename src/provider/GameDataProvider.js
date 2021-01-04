@@ -10,6 +10,7 @@ const initialState = {
     allGames: {},
     inGame: false,
     currentGameId: null,
+    gameDataReceived: false,
     currentGameData: {}
 }
 

@@ -14,6 +14,7 @@ import NameEntryPage from "./components/page/NameEntryPage";
 import GamesPage from "./components/page/GamesPage";
 import GameDataProvider from "./provider/GameDataProvider";
 import Game from "./components/page/Game";
+import WebsocketProvider from "./provider/WebsocketProvider";
 
 function App() {
   return (
@@ -27,7 +28,9 @@ function App() {
                           <GameDataProvider>
                               <Switch>
                                   <Route exact path="/games/:gameId">
-                                      <Game />
+                                      <WebsocketProvider>
+                                          <Game />
+                                      </WebsocketProvider>
                                   </Route>
                                   <Route exact path="/games">
                                       <GamesPage />
