@@ -63,7 +63,7 @@ const GamesPage = () => {
         fetch();
     }, [gameDataDispatch, history, playerDataDispatch, playerDataState.playerId]);
 
-    const handleCreateClick = async (event) => {
+    const handleCreateClick = async (e) => {
         const gameData = await postData(RestApiEndpoint.Games, {}, playerDataState.playerId);
         const requestBody = { player_id: playerDataState.playerId, game_id: gameData.data };
         const results = await postData(RestApiEndpoint.PlayerGames, requestBody)

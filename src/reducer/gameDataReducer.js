@@ -10,11 +10,11 @@ export const GAME_STORAGE_KEY = 'gameData'
 const gameDataReducer = (state, action) => {
     switch(action.type) {
         case LOADING:
-            return { ...state, loading: true, startUp: false }
+            return { ...state, loading: true, startUp: false, gameDataReceived: false, currentGameData: null }
         case UPDATE_ALL_GAMES:
-            return { ...state, loading: false, startUp: false, allGames: action.payload }
+            return { ...state, loading: false, startUp: false, currentGameData: null, allGames: action.payload, gameDataReceived: false }
         case JOIN_GAME:
-            return { ...state, loading: false, startUp: false, inGame: true, currentGameId: action.gameId }
+            return { ...state, loading: false, startUp: false, inGame: true, currentGameId: action.gameId, gameDataReceived: false }
         case UPDATE_CURRENT_GAME:
             return { ...state, loading: false, startUp: false, inGame: true, currentGameData: action.gameData, gameDataReceived: true }
         case LEAVE_GAME:

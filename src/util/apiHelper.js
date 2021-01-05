@@ -39,7 +39,7 @@ const call = async (url, requestOptions = undefined) => {
     return callHelper(state, url, requestOptions);
 };
 
-const callHelper = async (state, url, requestOptions = undefined, retries = 0, maxRetries = 3) => {
+const callHelper = async (state, url, requestOptions = undefined, retries = 0, maxRetries = 0) => {
     state.retries = retries;
     try {
         const response = await fetch(url, requestOptions);

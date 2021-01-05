@@ -1,8 +1,11 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import { styled } from "@material-ui/core/styles";
-import { Box, Button, Card } from "@material-ui/core";
+import { Box, Button } from "@material-ui/core";
+
 import { WebSocketContext } from "../../provider/WebsocketProvider";
-import {WsEndpoint} from "../../constants/apiConstants";
+import { WsEndpoint } from "../../constants/apiConstants";
+import GameDataContext from "../../context/GameDataContext";
+import PlayerDataContext from "../../context/PlayerDataContext";
 
 const Container = styled(Box)({
     width: '75%',
@@ -39,8 +42,13 @@ const PlayerBox = styled(Box)({
     alignItems: 'center'
 })
 
-const Pregame = ({ players, isCreator, gameId }) => {
+const Pregame = ({ players, gameId }) => {
     const { sendMessage } = useContext(WebSocketContext);
+
+    const { gameDataState } = useContext(GameDataContext);
+    const { playerDataState } = useContext(PlayerDataContext);
+
+    const isCreator = gameDataState.currentGameData.creator_id === playerDataState.playerId;
 
     const startGame = (e) => {
         sendMessage(WsEndpoint.StartGameApp(gameId));
