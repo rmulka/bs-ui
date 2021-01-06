@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 
 import PlayerDataContext from "../../context/PlayerDataContext";
 import { titleFont } from "../../theme/bsTheme";
-// import acesPng from "../../../public/cards/aces.png";
 import { RestApiEndpoint } from "../../constants/apiConstants";
 import { postData } from "../../util/apiHelper";
 import { EDIT_PLAYER_INFO, PLAYER_STORAGE_KEY } from "../../reducer/playerDataReducer";

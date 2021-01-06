@@ -6,7 +6,7 @@ import { styled, makeStyles } from "@material-ui/core/styles";
 import GameDataContext from "../../context/GameDataContext";
 import PlayerDataContext from "../../context/PlayerDataContext";
 import { WebSocketContext } from "../../provider/WebsocketProvider";
-import { mapApiCardsToPngStrings, sortCards } from "../../util/cardUtils";
+import { mapApiCardsToPngStrings, mapRank, sortCards } from "../../util/cardUtils";
 import PlayerCard from "../general/PlayerCard";
 
 const CardsContainer = styled(Box)({
@@ -37,22 +37,27 @@ const GameInProgress = () => {
     const { playerDataState } = useContext(PlayerDataContext);
     const { sendMessage } = useContext(WebSocketContext);
 
-    const playerCards = gameDataState.currentGameData.details.player_cards[playerDataState.playerId];
+    const gameDetails = gameDataState.currentGameData.details;
+
+    const playerCards = gameDetails.player_cards[playerDataState.playerId];
     const numPlayerCards = playerCards.length;
     const sortedCards = sortCards(playerCards);
 
-    const playerTurn = gameDataState.currentGameData.details.player_id_number_map[playerDataState.playerId];
-    const currentTurn = gameDataState.currentGameData.details.current_turn;
+    const playerTurn = gameDetails.player_id_number_map[playerDataState.playerId];
+    const currentTurn = gameDetails.current_turn;
+    const currentTurnId = Object.entries(gameDetails.player_id_number_map).find(([key, value]) => value === currentTurn)[0];
+    const currentTurnName = gameDataState.currentGameData.players.find(player => player.id === currentTurnId).name;
+
+    const currentRank = gameDetails.current_rank;
 
     return (
         <>
-            <Typography>{JSON.stringify(gameDataState.currentGameData)}</Typography>
+            <Typography>{currentTurnName}'s turn to play {mapRank(currentRank)}'s</Typography>
             <CardsContainer>
                 <div className={classes.container} style={{ gridTemplateColumns: `repeat(${numPlayerCards + 1}, 1fr)` }}>
                     {mapApiCardsToPngStrings(sortedCards).map((pngStr, idx) => (
                         <div style={{ gridColumn: `${idx + 1} / span 2`, gridRow: 1, zIndex: `${idx}` }}>
                             <PlayerCard pngStr={pngStr} currentTurn={currentTurn} playerTurn={playerTurn} />
-                            {/*<img src={`/cards/${pngStr}`} style={{ height: '150px', width: '100px' }} alt={'Card png'} />*/}
                         </div>
                     ))}
                 </div>
