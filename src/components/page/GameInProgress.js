@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import { useParams } from "react-router-dom";
 import { Typography, Box } from "@material-ui/core";
 import { styled, makeStyles } from "@material-ui/core/styles";
@@ -8,6 +8,7 @@ import PlayerDataContext from "../../context/PlayerDataContext";
 import { WebSocketContext } from "../../provider/WebsocketProvider";
 import { mapApiCardsToPngStrings, mapRank, sortCards } from "../../util/cardUtils";
 import PlayerCard from "../general/PlayerCard";
+import NumSelectedCards from "../general/NumSelectedCards";
 
 const CardsContainer = styled(Box)({
     width: '90%',
@@ -50,14 +51,37 @@ const GameInProgress = () => {
 
     const currentRank = gameDetails.current_rank;
 
+    const selectedCards = useRef({});
+    const numSelectedCardsRef = useRef();
+
+    const selectCard = (idx) => {
+        selectedCards.current[idx] = sortedCards[idx];
+        numSelectedCardsRef.current.setNumCards(Object.keys(selectedCards.current).length)
+    };
+
+    const removeCard = (idx) => {
+        delete selectedCards.current[idx];
+        numSelectedCardsRef.current.setNumCards(Object.keys(selectedCards.current).length)
+    };
+
     return (
         <>
             <Typography>{currentTurnName}'s turn to play {mapRank(currentRank)}'s</Typography>
+            {currentTurn === playerTurn && (
+                <NumSelectedCards ref={numSelectedCardsRef} numCards={Object.keys(selectedCards.current).length} rank={mapRank(currentRank)} />
+            )}
             <CardsContainer>
                 <div className={classes.container} style={{ gridTemplateColumns: `repeat(${numPlayerCards + 1}, 1fr)` }}>
                     {mapApiCardsToPngStrings(sortedCards).map((pngStr, idx) => (
                         <div style={{ gridColumn: `${idx + 1} / span 2`, gridRow: 1, zIndex: `${idx}` }}>
-                            <PlayerCard pngStr={pngStr} currentTurn={currentTurn} playerTurn={playerTurn} />
+                            <PlayerCard
+                                pngStr={pngStr}
+                                currentTurn={currentTurn}
+                                playerTurn={playerTurn}
+                                selectCard={selectCard}
+                                removeCard={removeCard}
+                                idx={idx}
+                            />
                         </div>
                     ))}
                 </div>

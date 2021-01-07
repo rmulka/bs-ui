@@ -18,8 +18,14 @@ const CustomCardMedia = styled(CardMedia)({
     width: '100%'
 });
 
-const PlayerCard = ({ pngStr, playerTurn, currentTurn }) => {
+const PlayerCard = ({ pngStr, playerTurn, currentTurn, selectCard, removeCard, idx }) => {
     const [selected, setSelected] = useState(false);
+
+    const select = (e) => {
+        if (selected) removeCard(idx);
+        else selectCard(idx);
+        setSelected(!selected);
+    }
 
     const CardBox = ({ children }) => {
         if (selected) {
@@ -41,7 +47,7 @@ const PlayerCard = ({ pngStr, playerTurn, currentTurn }) => {
             <CardBox>
                 <CardContainer>
                     <ButtonBase
-                        onClick={e => {setSelected(!selected)}}
+                        onClick={select}
                     >
                         <CustomCardMedia
                             src={`/cards/${pngStr}`}
