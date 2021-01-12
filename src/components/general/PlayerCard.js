@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ButtonBase, Card, CardMedia, Box } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import { yellow } from '@material-ui/core/colors';
@@ -26,6 +26,10 @@ const PlayerCard = ({ pngStr, playerTurn, currentTurn, selectCard, removeCard, i
         else selectCard(idx);
         setSelected(!selected);
     }
+
+    useEffect(() => {
+        setSelected(false);
+    }, [currentTurn, pngStr])
 
     const CardBox = ({ children }) => {
         if (selected) {

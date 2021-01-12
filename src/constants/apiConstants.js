@@ -17,5 +17,6 @@ export const WsEndpoint = {
     Registry: `${WS_BASE_URL}/socket`,
     GameApp: (gameId) => `/app/game/details/${gameId}`,
     GameTopic: (gameId) => `/topic/game/${gameId}`,
-    StartGameApp: (gameId) => `/app/game/start/${gameId}`
+    StartGameApp: (gameId) => `/app/game/start/${gameId}`,
+    GameUpdateApp: (gameId) => `/app/game/turn/${gameId}`
 };

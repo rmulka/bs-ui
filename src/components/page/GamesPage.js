@@ -11,7 +11,6 @@ import { fetchData, postData } from "../../util/apiHelper";
 import { RestApiEndpoint } from "../../constants/apiConstants";
 import Loading from "../loading/Loading";
 import GameCard from "../general/GameCard";
-import useUnload from "../../hooks/useUnload";
 import usePopState from "../../hooks/usePopState";
 
 const Container = styled(Box)({

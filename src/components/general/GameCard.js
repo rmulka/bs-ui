@@ -29,7 +29,7 @@ const GameStatusTypography = styled(Typography)({
 const GameCard = ({ gameId, playerId, creatorName, numPlayers, inProgress, gameDataDispatch }) => {
     const history = useHistory();
 
-    const joinGame = async (event) => {
+    const joinGame = async (e) => {
         const requestBody = { player_id: playerId, game_id: gameId };
         const results = await postData(RestApiEndpoint.PlayerGames, requestBody);
         if (!results.error && results.responseCode === 200) {
