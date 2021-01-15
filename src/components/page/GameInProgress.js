@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import { useParams } from "react-router-dom";
-import { Typography, Box, Button } from "@material-ui/core";
+import { Typography, Box } from "@material-ui/core";
 import { styled, makeStyles } from "@material-ui/core/styles";
 
 import GameDataContext from "../../context/GameDataContext";
@@ -11,6 +11,23 @@ import PlayerCard from "../general/PlayerCard";
 import NumSelectedCards from "../general/NumSelectedCards";
 import { WsEndpoint } from "../../constants/apiConstants";
 import SubmitTurnButton from "../general/SubmitTurnButton";
+import Pile from "../general/Pile";
+import GamePlayersDisplay from "../general/GamePlayersDisplay";
+
+const Container = styled(Box)({
+    width: '100%',
+    height: '100%',
+    paddingTop: '8%'
+});
+
+const GameContainer = styled(Box)({
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+})
 
 const CardsContainer = styled(Box)({
     width: '90%',
@@ -19,8 +36,17 @@ const CardsContainer = styled(Box)({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    position: 'absolute',
-    bottom: 5
+    marginBottom: '1%'
+});
+
+const CenterContainer = styled(Box)({
+    width: '40%',
+    height: '40%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    // padding: '2%'
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -55,8 +81,19 @@ const GameInProgress = () => {
     const currentTurnId = Object.entries(gameDetails.player_id_number_map).find(([key, value]) => value === currentTurn)[0];
     const currentTurnName = gameDataState.currentGameData.players.find(player => player.id === currentTurnId).name;
 
+    const pile = gameDetails.pile;
+
     const currentRank = gameDetails.current_rank;
     const currentCardDisplay = gameDetails.first_turn ? 'A of Spades' : `${mapRank(currentRank)}'s`;
+
+    const numPlayers = gameDataState.currentGameData.num_players;
+    const prevTurnUuid = gameDetails.first_turn ? null :
+        Object.entries(gameDetails.player_id_number_map).find(([id, num]) => num === ((currentTurn - 1) + numPlayers) % numPlayers)[0];
+    const prevTurnPlayer = gameDataState.currentGameData.players.find(player => player.id === prevTurnUuid);
+    const lastTurnMessage = pile.length > 0
+        ? `${prevTurnPlayer.name} played ${gameDetails.num_cards_last_played} ${mapRank(gameDetails.last_played_rank)}` +
+            ((gameDetails.num_cards_last_played > 1) ? '\'s' : '')
+        : "";
 
     const selectCard = (idx) => {
         selectedCards.current[idx] = sortedCards[idx];
@@ -98,35 +135,54 @@ const GameInProgress = () => {
         sendMessage(WsEndpoint.GameUpdateApp(gameId), payload);
 
         numSelectedCardsRef.current.setNumCards(0);
+        submitTurnButtonRef.current.setDisabled(true);
     }
 
     return (
-        <>
-            <Typography>{currentTurnName}'s turn to play {currentCardDisplay}</Typography>
-            {currentTurn === playerTurn && (
-                <>
-                    <NumSelectedCards ref={numSelectedCardsRef} rank={mapRank(currentRank)} />
-                    <SubmitTurnButton ref={submitTurnButtonRef} onClick={useTurn} />
-                </>
-
-            )}
-            <CardsContainer>
-                <div className={classes.container} style={{ gridTemplateColumns: `repeat(${numPlayerCards + 1}, 1fr)` }}>
-                    {mapApiCardsToPngStrings(sortedCards).map((pngStr, idx) => (
-                        <div style={{ gridColumn: `${idx + 1} / span 2`, gridRow: 1, zIndex: `${idx}` }} key={idx}>
-                            <PlayerCard
-                                pngStr={pngStr}
-                                currentTurn={currentTurn}
-                                playerTurn={playerTurn}
-                                selectCard={selectCard}
-                                removeCard={removeCard}
-                                idx={idx}
-                            />
-                        </div>
-                    ))}
-                </div>
-            </CardsContainer>
-        </>
+        <Container>
+            <GameContainer>
+                <GamePlayersDisplay
+                    playerIdNumMap={gameDetails.player_id_number_map}
+                    playerOrder={gameDetails.player_order}
+                    playerCards={gameDetails.player_cards}
+                    myUuid={playerDataState.playerId}
+                    players={gameDataState.currentGameData.players}
+                    currentTurn={currentTurn}
+                    currentMappedRank={mapRank(currentRank)}
+                />
+                <CenterContainer>
+                    {playerTurn === currentTurn && (
+                        <Typography>
+                            <Box fontSize={'h5.fontSize'} fontWeight={'fontWeightBold'}>Your turn to play {currentCardDisplay}</Box>
+                        </Typography>
+                    )}
+                    <Typography variant={'h5'}>{lastTurnMessage}</Typography>
+                    <Pile cards={pile} />
+                    {currentTurn === playerTurn && (
+                        <>
+                            <NumSelectedCards ref={numSelectedCardsRef} rank={mapRank(currentRank)} />
+                            <SubmitTurnButton ref={submitTurnButtonRef} onClick={useTurn} />
+                        </>
+                    )}
+                </CenterContainer>
+                <CardsContainer>
+                    <div className={classes.container} style={{ gridTemplateColumns: `repeat(${numPlayerCards + 1}, 1fr)` }}>
+                        {mapApiCardsToPngStrings(sortedCards).map((pngStr, idx) => (
+                            <div style={{ gridColumn: `${idx + 1} / span 2`, gridRow: 1, zIndex: `${idx}` }} key={idx}>
+                                <PlayerCard
+                                    pngStr={pngStr}
+                                    currentTurn={currentTurn}
+                                    playerTurn={playerTurn}
+                                    selectCard={selectCard}
+                                    removeCard={removeCard}
+                                    idx={idx}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </CardsContainer>
+            </GameContainer>
+        </Container>
     )
 };
 

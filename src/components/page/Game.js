@@ -3,12 +3,11 @@ import { useParams } from 'react-router-dom';
 import { Box } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 
-import useUnload from "../../hooks/useUnload";
 import GameDataContext from "../../context/GameDataContext";
 import PlayerDataContext from "../../context/PlayerDataContext";
 import { deleteData } from "../../util/apiHelper";
 import { RestApiEndpoint, WsEndpoint } from "../../constants/apiConstants";
-import { LEAVE_GAME, UPDATE_CURRENT_GAME } from "../../reducer/gameDataReducer";
+import { LEAVE_GAME } from "../../reducer/gameDataReducer";
 import { WebSocketContext } from "../../provider/WebsocketProvider";
 import Loading from "../loading/Loading";
 import GameInProgress from "./GameInProgress";

@@ -51,8 +51,8 @@ const NameEntryPage = () => {
         if (nameInputRef.current.value.length > 0) {
             const requestBody = { name: nameInputRef.current.value };
             const result = await postData(RestApiEndpoint.Players, requestBody);
-            playerDataDispatch({ type: EDIT_PLAYER_INFO, playerId: result.data.id, playerName: result.data.name })
-            history.push("/games")
+            playerDataDispatch({ type: EDIT_PLAYER_INFO, playerId: result.data.id, playerName: result.data.name });
+            history.push("/games");
         }
     };
 

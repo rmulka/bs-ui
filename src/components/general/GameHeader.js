@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { styled } from "@material-ui/core/styles";
-import { Box, Grid, Button } from "@material-ui/core";
+import { Box, Grid, Button, withStyles, Typography } from "@material-ui/core";
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { useHistory, useParams } from "react-router-dom";
 
@@ -9,6 +9,7 @@ import { deleteData } from "../../util/apiHelper";
 import { RestApiEndpoint } from "../../constants/apiConstants";
 import { LEAVE_GAME } from "../../reducer/gameDataReducer";
 import PlayerDataContext from "../../context/PlayerDataContext";
+import { grey } from "@material-ui/core/colors";
 
 const Container = styled(Box)({
     position: 'absolute',
@@ -29,6 +30,12 @@ const GridSpot = styled(Box)({
     flexDirection: 'row',
     alignItems: 'center'
 })
+
+const ColorTypography = withStyles({
+    root: {
+        color: grey[300]
+    }
+})(Typography);
 
 const GameHeader = () => {
     const history = useHistory();
@@ -56,7 +63,7 @@ const GameHeader = () => {
                 <Grid item xs={4}>
                     <GridSpot style={{ justifyContent: 'center' }}>
                         {gameDataState.currentGameData.in_progress && (
-                            <p>hi</p>
+                            <ColorTypography>{gameDataState.currentGameData.creator_name}'s BS Game</ColorTypography>
                         )}
                     </GridSpot>
                 </Grid>
