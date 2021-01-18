@@ -13,8 +13,8 @@ const CustomCard = styled(Card)({
 });
 
 const CardContainer = styled(Box)({
-    width: '-webkit-fill-available',
-    height: '-webkit-fill-available',
+    width: '90%',
+    height: '90%',
     margin: '5%',
     display: 'flex',
     flexDirection: 'column',

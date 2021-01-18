@@ -12,8 +12,6 @@ import PlayerDataContext from "../../context/PlayerDataContext";
 import { grey } from "@material-ui/core/colors";
 
 const Container = styled(Box)({
-    position: 'absolute',
-    top: 0,
     width: '100%',
     height: '8%',
     display: 'flex',
@@ -21,7 +19,7 @@ const Container = styled(Box)({
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'stretch'
-})
+});
 
 const GridSpot = styled(Box)({
     width: '100%',
@@ -29,7 +27,7 @@ const GridSpot = styled(Box)({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center'
-})
+});
 
 const ColorTypography = withStyles({
     root: {
@@ -62,13 +60,13 @@ const GameHeader = () => {
                 </Grid>
                 <Grid item xs={4}>
                     <GridSpot style={{ justifyContent: 'center' }}>
-                        {gameDataState.currentGameData.in_progress && (
-                            <ColorTypography>{gameDataState.currentGameData.creator_name}'s BS Game</ColorTypography>
-                        )}
+                        <ColorTypography>{gameDataState.currentGameData.creator_name}'s BS Game</ColorTypography>
                     </GridSpot>
                 </Grid>
                 <Grid item xs={4}>
-                    <GridSpot style={{ justifyContent: 'flex-end' }} />
+                    <GridSpot style={{ justifyContent: 'flex-end' }}>
+                        <ColorTypography style={{ marginRight: '5%' }}>{playerDataState.playerName}</ColorTypography>
+                    </GridSpot>
                 </Grid>
             </Grid>
         </Container>

@@ -20,7 +20,7 @@ const Container = styled(Box)({
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center'
 })
 
