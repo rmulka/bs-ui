@@ -18,5 +18,6 @@ export const WsEndpoint = {
     GameApp: (gameId) => `/app/game/details/${gameId}`,
     GameTopic: (gameId) => `/topic/game/${gameId}`,
     StartGameApp: (gameId) => `/app/game/start/${gameId}`,
-    GameUpdateApp: (gameId) => `/app/game/turn/${gameId}`
+    GameUpdateApp: (gameId) => `/app/game/turn/${gameId}`,
+    GameBsApp: (gameId) => `/app/game/update/${gameId}/bs`
 };

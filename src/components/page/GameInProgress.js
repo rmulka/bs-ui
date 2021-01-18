@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import { useParams } from "react-router-dom";
-import { Typography, Box } from "@material-ui/core";
+import { Typography, Box, Button, withStyles } from "@material-ui/core";
 import { styled, makeStyles } from "@material-ui/core/styles";
 
 import GameDataContext from "../../context/GameDataContext";
@@ -13,6 +13,7 @@ import { WsEndpoint } from "../../constants/apiConstants";
 import SubmitTurnButton from "../general/SubmitTurnButton";
 import Pile from "../general/Pile";
 import GamePlayersDisplay from "../general/GamePlayersDisplay";
+import { red } from "@material-ui/core/colors";
 
 const Container = styled(Box)({
     width: '100%',
@@ -45,9 +46,23 @@ const CenterContainer = styled(Box)({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    // padding: '2%'
+    alignItems: 'center'
 });
+
+const TurnButtonsContainer = styled(Box)({
+    width: 'fit-content',
+    height: 'fit-content',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+});
+
+const RedColorTypography = withStyles({
+    root: {
+        color: red[800]
+    }
+})(Typography);
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -88,12 +103,24 @@ const GameInProgress = () => {
 
     const numPlayers = gameDataState.currentGameData.num_players;
     const prevTurnUuid = gameDetails.first_turn ? null :
-        Object.entries(gameDetails.player_id_number_map).find(([id, num]) => num === ((currentTurn - 1) + numPlayers) % numPlayers)[0];
+        Object.entries(gameDetails.player_id_number_map).find(([id, num]) => num === gameDetails.player_order[gameDetails.prev_turn])[0];
     const prevTurnPlayer = gameDataState.currentGameData.players.find(player => player.id === prevTurnUuid);
-    const lastTurnMessage = pile.length > 0
-        ? `${prevTurnPlayer.name} played ${gameDetails.num_cards_last_played} ${mapRank(gameDetails.last_played_rank)}` +
+
+    const lastTurnMessage = () => {
+        if (gameDetails.bs_called) {
+            const youCalledBs = gameDetails.player_called_bs_id === playerDataState.playerId;
+            const youGotBs = gameDetails.bs_player_id === playerDataState.playerId;
+            const nameThatGotCalled = gameDataState.currentGameData.players.find(player => player.id === gameDetails.bs_player_id).name;
+            const nameThatCalled = gameDataState.currentGameData.players.find(player => player.id === gameDetails.player_called_bs_id).name;
+            if (gameDetails.is_bs) return (youCalledBs ? 'You' : nameThatCalled) + ' called ' + (youGotBs ? 'your' : `${nameThatGotCalled}'s`) + ' BS!';
+            else return (youCalledBs ? 'You' : nameThatCalled) + ' called BS on ' + (youGotBs ? 'you' : nameThatGotCalled) +
+                ' and ' + (youCalledBs ? 'were' : 'was') + ' wrong!';
+        }
+        else if (pile.length > 0) return `${prevTurnPlayer.name} played ${gameDetails.num_cards_last_played} ${mapRank(gameDetails.last_played_rank)}` +
             ((gameDetails.num_cards_last_played > 1) ? '\'s' : '')
-        : "";
+
+        return '';
+    }
 
     const selectCard = (idx) => {
         selectedCards.current[idx] = sortedCards[idx];
@@ -138,6 +165,31 @@ const GameInProgress = () => {
         submitTurnButtonRef.current.setDisabled(true);
     }
 
+    const callBs = (e) => {
+        const payload = { player_id: playerDataState.playerId };
+        sendMessage(WsEndpoint.GameBsApp(gameId), payload);
+    }
+
+    const startGame = (e) => {
+        sendMessage(WsEndpoint.StartGameApp(gameId));
+    }
+
+    const TurnOptions = () => {
+        if (currentTurn === playerTurn) return (
+            <>
+                <NumSelectedCards ref={numSelectedCardsRef} rank={mapRank(currentRank)} />
+                <TurnButtonsContainer>
+                    <Button style={{ marginRight: '1em' }} disabled={gameDetails.bs_called || gameDetails.first_turn} onClick={callBs}>Call BS!</Button>
+                    <SubmitTurnButton ref={submitTurnButtonRef} onClick={useTurn} />
+                </TurnButtonsContainer>
+            </>
+        )
+        else if (playerDataState.playerId !== prevTurnUuid && gameDetails.pile.length > 0) return (
+            <Button disabled={gameDetails.bs_called} onClick={callBs}>Call BS!</Button>
+        )
+        return <></>
+    }
+
     return (
         <Container>
             <GameContainer>
@@ -150,21 +202,26 @@ const GameInProgress = () => {
                     currentTurn={currentTurn}
                     currentMappedRank={mapRank(currentRank)}
                 />
-                <CenterContainer>
-                    {playerTurn === currentTurn && (
-                        <Typography>
-                            <Box fontSize={'h5.fontSize'} fontWeight={'fontWeightBold'}>Your turn to play {currentCardDisplay}</Box>
-                        </Typography>
-                    )}
-                    <Typography variant={'h5'}>{lastTurnMessage}</Typography>
-                    <Pile cards={pile} />
-                    {currentTurn === playerTurn && (
-                        <>
-                            <NumSelectedCards ref={numSelectedCardsRef} rank={mapRank(currentRank)} />
-                            <SubmitTurnButton ref={submitTurnButtonRef} onClick={useTurn} />
-                        </>
-                    )}
-                </CenterContainer>
+                {!gameDetails.is_winner && (
+                    <CenterContainer>
+                        {playerTurn === currentTurn && (
+                            <Typography>
+                                <Box fontSize={'h5.fontSize'} fontWeight={'fontWeightBold'}>Your turn to play {currentCardDisplay}</Box>
+                            </Typography>
+                        )}
+                        <Typography variant={'h5'}>{lastTurnMessage()}</Typography>
+                        <Pile cards={pile} />
+                        <TurnOptions />
+                    </CenterContainer>
+                )}
+                {gameDetails.is_winner && (
+                    <>
+                        <RedColorTypography>
+                            <Box fontSize={'h2.fontSize'} fontWeight={'fontWeightBold'}>{gameDetails.winner_name} wins!</Box>
+                        </RedColorTypography>
+                        <Button onClick={startGame}>Restart</Button>
+                    </>
+                )}
                 <CardsContainer>
                     <div className={classes.container} style={{ gridTemplateColumns: `repeat(${numPlayerCards + 1}, 1fr)` }}>
                         {mapApiCardsToPngStrings(sortedCards).map((pngStr, idx) => (
