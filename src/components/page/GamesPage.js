@@ -5,8 +5,8 @@ import { useHistory } from 'react-router-dom';
 
 import GameDataContext from "../../context/GameDataContext";
 import PlayerDataContext from "../../context/PlayerDataContext";
-import { JOIN_GAME, LOADING, RESET_GAME_DATA, UPDATE_ALL_GAMES } from "../../reducer/gameDataReducer";
-import { RESET_PLAYER_DATA } from "../../reducer/playerDataReducer";
+import {GAME_STORAGE_KEY, JOIN_GAME, LOADING, RESET_GAME_DATA, UPDATE_ALL_GAMES} from "../../reducer/gameDataReducer";
+import {PLAYER_STORAGE_KEY, RESET_PLAYER_DATA} from "../../reducer/playerDataReducer";
 import { fetchData, postData } from "../../util/apiHelper";
 import { RestApiEndpoint } from "../../constants/apiConstants";
 import Loading from "../loading/Loading";
@@ -39,7 +39,8 @@ const GamesPage = () => {
 
     usePopState(e => {
         e.preventDefault();
-        playerDataDispatch({ type: RESET_PLAYER_DATA })
+        localStorage.removeItem(GAME_STORAGE_KEY);
+        localStorage.removeItem(PLAYER_STORAGE_KEY);
     })
 
     useEffect(() => {
