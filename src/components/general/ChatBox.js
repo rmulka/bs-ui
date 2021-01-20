@@ -8,7 +8,7 @@ import SendIcon from '@material-ui/icons/Send';
 import { WebSocketContext } from "../../provider/WebsocketProvider";
 import { WsEndpoint } from "../../constants/apiConstants";
 import PlayerDataContext from "../../context/PlayerDataContext";
-import {assignColors} from "../../util/styleUtils";
+import { assignColors } from "../../util/styleUtils";
 
 const ChatContainer = styled(Box)({
     width: '100%',
@@ -89,7 +89,6 @@ const ChatBox = ({ players }) => {
                 <ChatMessagesContainer>
                     {messageState.messages.map(({ first, second }, idx) => {
                         const player = players.find(player => player.id === first);
-                        console.log(colors[player.id]);
                         return <Typography key={idx}><Box fontWeight='fontWeightBold' color={colors[player.id]} display='inline'>{player.name}:</Box> {second}</Typography>
                     })}
                 </ChatMessagesContainer>
