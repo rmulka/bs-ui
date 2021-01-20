@@ -58,7 +58,7 @@ const ChatBox = ({ players }) => {
     const initialState = { messages: [] }
     const [messageState, setMessageState] = useState(initialState);
 
-    const colors = useMemo(() => assignColors(players), [players]);
+    const colors = useRef(assignColors(players));
 
     const { gameId } = useParams();
 
@@ -89,7 +89,7 @@ const ChatBox = ({ players }) => {
                 <ChatMessagesContainer>
                     {messageState.messages.map(({ first, second }, idx) => {
                         const player = players.find(player => player.id === first);
-                        return <Typography key={idx}><Box fontWeight='fontWeightBold' color={colors[player.id]} display='inline'>{player.name}:</Box> {second}</Typography>
+                        return <Typography key={idx}><Box fontWeight='fontWeightBold' color={colors.current[player.id]} display='inline'>{player.name}:</Box> {second}</Typography>
                     })}
                 </ChatMessagesContainer>
                 <MessageInputContainer style={{ backgroundColor: '#222222' }}>
