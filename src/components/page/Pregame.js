@@ -91,7 +91,7 @@ const Pregame = ({ players, gameId }) => {
                 </MessageBox>
             )}
             {isCreator && (
-                <Button /*disabled={!atLeast3Players}*/ onClick={startGame}>Start Game</Button>
+                <Button disabled={!atLeast3Players} onClick={startGame}>Start Game</Button>
             )}
         </Container>
     )
