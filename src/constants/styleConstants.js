@@ -1,1 +1,0 @@
-export const MAIN_LAYOUT_MARGIN_WIDTH = '3em';

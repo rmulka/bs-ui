@@ -1,12 +1,12 @@
 import React, { createContext, useRef, useEffect, useState, useContext, useMemo } from 'react'
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 import { WsEndpoint } from "../constants/apiConstants";
 import Loading from "../components/loading/Loading";
 import GameDataContext from "../context/GameDataContext";
-import { UPDATE_CURRENT_GAME } from "../reducer/gameDataReducer";
+import {RESET_GAME_DATA, UPDATE_CURRENT_GAME} from "../reducer/gameDataReducer";
 
 const WebSocketContext = createContext(null)
 
@@ -14,6 +14,7 @@ export { WebSocketContext }
 
 const WebsocketProvider = ({ children }) => {
     const { gameId } = useParams();
+    const history = useHistory();
 
     const sockRef = useRef(null);
     const [sockActive, setSockActive] = useState(false);
@@ -33,19 +34,24 @@ const WebsocketProvider = ({ children }) => {
         sockRef.current.connect({}, (frame) => {
             console.log("Websocket connected");
             sockRef.current.subscribe(WsEndpoint.GameTopic(gameId), (data) => {
-                console.log(JSON.parse(data.body));
-                gameDataDispatch({ type: UPDATE_CURRENT_GAME, gameData: JSON.parse(data.body) })
+                const jsonData = JSON.parse(data.body);
+                if (!jsonData.is_active) {
+                    history.push('/games');
+                    gameDataDispatch({ type: RESET_GAME_DATA });
+                } else {
+                    gameDataDispatch({ type: UPDATE_CURRENT_GAME, gameData: jsonData });
+                }
             });
             setSockActive(true);
         });
 
         return () => sockRef.current.disconnect();
-    }, [gameDataDispatch, gameId]);
+    }, [gameDataDispatch, gameId, history]);
 
     const ws = useMemo(() => ({
         ws: sockRef.current,
         sendMessage
-    }), []);
+    }), [sockRef.current]);
 
     if (!sockActive) return <Loading />
     return (

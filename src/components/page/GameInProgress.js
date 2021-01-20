@@ -15,6 +15,7 @@ import Pile from "../general/Pile";
 import GamePlayersDisplay from "../general/GamePlayersDisplay";
 import { red } from "@material-ui/core/colors";
 import LensIcon from '@material-ui/icons/Lens';
+import ChatBox from "../general/ChatBox";
 
 const GameContainer = styled(Box)({
     width: '100%',
@@ -59,6 +60,15 @@ const YourTurnMarker = styled(LensIcon)({
     right: '25%',
     color: red[700],
     fontSize: 40
+});
+
+const ChatBoxContainer = styled(Box)({
+    height: 'calc(100vh - calc(1% + 150px + 2%) - 7% - 8% - 125px - 7%)',
+    width: '20%',
+    position: 'absolute',
+    top: '50%',
+    marginTop: 'calc((100vh - calc(1% + 150px + 2%) - 8% - 125px - 5%) / -2)',
+    right: '5%'
 });
 
 const RedColorTypography = withStyles({
@@ -108,6 +118,10 @@ const GameInProgress = () => {
     const prevTurnUuid = gameDetails.first_turn ? null :
         Object.entries(gameDetails.player_id_number_map).find(([id, num]) => num === gameDetails.player_order[gameDetails.prev_turn])[0];
     const prevTurnPlayer = gameDataState.currentGameData.players.find(player => player.id === prevTurnUuid);
+
+    const winnerId = gameDetails.winner_id;
+    const winnerName = winnerId ? gameDataState.currentGameData.players.find(player => player.id === winnerId).name : '';
+
 
     const lastTurnMessage = () => {
         if (gameDetails.bs_called) {
@@ -206,6 +220,9 @@ const GameInProgress = () => {
                 currentTurn={currentTurn}
                 currentMappedRank={mapRank(currentRank)}
             />
+            <ChatBoxContainer>
+                <ChatBox players={gameDataState.currentGameData.players} />
+            </ChatBoxContainer>
             {!gameDetails.is_winner && (
                 <CenterContainer>
                     {playerTurn === currentTurn && (
@@ -221,9 +238,18 @@ const GameInProgress = () => {
             {gameDetails.is_winner && (
                 <>
                     <RedColorTypography>
-                        <Box fontSize={'h2.fontSize'} fontWeight={'fontWeightBold'}>{gameDetails.winner_name} wins!</Box>
+                        <Box fontSize={'h2.fontSize'} fontWeight={'fontWeightBold'}>
+                            {(winnerId === playerDataState.playerId) && (
+                                'You win!'
+                            )}
+                            {(winnerId !== playerDataState.playerId) && (
+                                `${winnerName} wins!`
+                            )}
+                        </Box>
                     </RedColorTypography>
-                    <Button onClick={startGame}>Restart</Button>
+                    {gameDataState.currentGameData.creator_id === playerDataState.playerId && (
+                        <Button onClick={startGame}>New Game</Button>
+                    )}
                 </>
             )}
             {playerTurn === currentTurn && (<YourTurnMarker />)}
