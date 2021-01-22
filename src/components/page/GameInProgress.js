@@ -106,17 +106,13 @@ const GameInProgress = () => {
 
     const playerTurn = gameDetails.player_id_number_map[playerDataState.playerId];
     const currentTurn = gameDetails.player_order[gameDetails.current_turn];
-    const currentTurnId = Object.entries(gameDetails.player_id_number_map).find(([key, value]) => value === currentTurn)[0];
-    const currentTurnName = gameDataState.currentGameData.players.find(player => player.id === currentTurnId).name;
 
     const pile = gameDetails.pile;
 
     const currentRank = gameDetails.current_rank;
     const currentCardDisplay = gameDetails.first_turn ? 'A of Spades' : `${mapRank(currentRank)}'s`;
 
-    const numPlayers = gameDataState.currentGameData.num_players;
-    const prevTurnUuid = gameDetails.first_turn ? null :
-        Object.entries(gameDetails.player_id_number_map).find(([id, num]) => num === gameDetails.player_order[gameDetails.prev_turn])[0];
+    const prevTurnUuid = gameDetails.first_turn ? null : gameDetails.player_number_id_map[gameDetails.player_order[gameDetails.prev_turn]];
     const prevTurnPlayer = gameDataState.currentGameData.players.find(player => player.id === prevTurnUuid);
 
     const winnerId = gameDetails.winner_id;
