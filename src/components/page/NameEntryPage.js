@@ -10,21 +10,20 @@ import { postData } from "../../util/apiHelper";
 import { EDIT_PLAYER_INFO, PLAYER_STORAGE_KEY, LOADING } from "../../reducer/playerDataReducer";
 import { GAME_STORAGE_KEY } from "../../reducer/gameDataReducer";
 
-const FONT_SIZE = '21.4285714285rem';
-
 const CustomTextTypography = styled(Typography)({
     position: 'relative',
     textAlign: 'center',
     height: '40vh',
     width: '100%',
-    marginBottom: 'calc(40vh - 4rem)',
+    fontSize: '40vh',
+    marginBottom: '36vh',
     zIndex: 1
 });
 
 const CustomImageTypography = styled(Typography)({
     textAlign: 'center',
     position: 'absolute',
-    paddingTop: `calc(${FONT_SIZE} - 4rem)`,
+    paddingTop: '33vh',
     width: '100%',
     zIndex: 0
 });
