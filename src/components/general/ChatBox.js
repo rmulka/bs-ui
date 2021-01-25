@@ -37,7 +37,6 @@ const ChatMessagesContainer = styled(Box)({
 
 const MessageInputContainer = styled(Box)({
     width: '100%',
-    height: '15%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
