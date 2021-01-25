@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { styled, MuiThemeProvider } from '@material-ui/core/styles';
 import { Typography, TextField, Box, Button } from "@material-ui/core";
 import { useHistory } from 'react-router-dom';
@@ -17,7 +17,6 @@ const CustomTextTypography = styled(Typography)({
     textAlign: 'center',
     height: FONT_SIZE,
     width: '100%',
-    marginBottom: `calc(${document.getElementById('aces').clientHeight}px - 4rem + 5%)`,
     zIndex: 1
 });
 
@@ -48,6 +47,8 @@ const NameEntryPage = () => {
     const history = useHistory();
     const { playerDataDispatch } = useContext(PlayerDataContext);
     const nameInputRef = useRef(null);
+    const imgRef = useRef(null);
+    const [imgHeight, setImgHeight] = useState(0);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -60,6 +61,10 @@ const NameEntryPage = () => {
         }
     };
 
+    const onLoad = () => {
+        setImgHeight(imgRef.current.height);
+    }
+
     useEffect(() => {
         localStorage.removeItem(GAME_STORAGE_KEY);
         localStorage.removeItem(PLAYER_STORAGE_KEY);
@@ -69,9 +74,9 @@ const NameEntryPage = () => {
         <form onSubmit={handleSubmit} style={{ width: '100%', height: '100%' }}>
             <MuiThemeProvider theme={titleFont}>
                 <CustomImageTypography>
-                    <img src={'/cards/aces.png'} width={'40%'} height={'40%'} alt={"Aces png"} id={"aces"} />
+                    <img src={'/cards/aces.png'} width={'40%'} height={'40%'} alt={"Aces png"} onLoad={onLoad} ref={imgRef} />
                 </CustomImageTypography>
-                <CustomTextTypography variant='h1'>BS</CustomTextTypography>
+                <CustomTextTypography style={{ marginBottom: `calc(${imgHeight}px - 4rem + 5%)` }} variant='h1'>BS</CustomTextTypography>
             </MuiThemeProvider>
             <CustomBox>
                 <TextField
