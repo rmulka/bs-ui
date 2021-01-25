@@ -40,7 +40,7 @@ const CenterContainer = styled(Box)({
     width: '40%',
     minHeight: '40%',
     flexGrow: 1,
-    padding: '3% 0 3% 0',
+    padding: '1.5% 0 1.5% 0',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
