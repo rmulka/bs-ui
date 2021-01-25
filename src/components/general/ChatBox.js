@@ -85,7 +85,7 @@ const ChatBox = ({ players }) => {
 
     return (
         <form onSubmit={handleSubmit} style={{ height: '100%', width: '100%' }}>
-            <ChatContainer border={1} borderRadius={8} style={{ backgroundColor: '#222222' }}>
+            <ChatContainer border={1} borderRadius={8} boxShadow={3} style={{ backgroundColor: '#222222' }}>
                 <Typography style={{ height: '15%', color: grey[50] }} variant={'h5'}>Chat</Typography>
                 <ChatMessagesContainer>
                     {messageState.messages.map(({ first, second }, idx) => {
