@@ -15,8 +15,9 @@ const FONT_SIZE = '21.4285714285rem';
 const CustomTextTypography = styled(Typography)({
     position: 'relative',
     textAlign: 'center',
-    height: FONT_SIZE,
+    height: '40vh',
     width: '100%',
+    marginBottom: 'calc(40vh - 4rem)',
     zIndex: 1
 });
 
@@ -47,8 +48,6 @@ const NameEntryPage = () => {
     const history = useHistory();
     const { playerDataDispatch } = useContext(PlayerDataContext);
     const nameInputRef = useRef(null);
-    const imgRef = useRef(null);
-    const [imgHeight, setImgHeight] = useState(0);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -61,10 +60,6 @@ const NameEntryPage = () => {
         }
     };
 
-    const onLoad = () => {
-        setImgHeight(imgRef.current.height);
-    }
-
     useEffect(() => {
         localStorage.removeItem(GAME_STORAGE_KEY);
         localStorage.removeItem(PLAYER_STORAGE_KEY);
@@ -74,9 +69,9 @@ const NameEntryPage = () => {
         <form onSubmit={handleSubmit} style={{ width: '100%', height: '100%' }}>
             <MuiThemeProvider theme={titleFont}>
                 <CustomImageTypography>
-                    <img src={'/cards/aces.png'} width={'40%'} height={'40%'} alt={"Aces png"} onLoad={onLoad} ref={imgRef} />
+                    <img src={'/cards/aces.png'} width={'40%'} height={'40%'} alt={"Aces png"} />
                 </CustomImageTypography>
-                <CustomTextTypography style={{ marginBottom: `calc(${imgHeight}px - 4rem + 5%)` }} variant='h1'>BS</CustomTextTypography>
+                <CustomTextTypography variant='h1'>BS</CustomTextTypography>
             </MuiThemeProvider>
             <CustomBox>
                 <TextField
