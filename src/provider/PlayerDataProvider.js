@@ -5,6 +5,7 @@ import playerDataReducer, { PLAYER_STORAGE_KEY } from "../reducer/playerDataRedu
 import useReducerWithLocalStorage from "../hooks/useReducerWithLocalStorage";
 
 const initialState = {
+    loading: false,
     playerId: null,
     playerName: null
 }

@@ -10,6 +10,8 @@ import { WsEndpoint } from "../../constants/apiConstants";
 import PlayerDataContext from "../../context/PlayerDataContext";
 import { assignColors } from "../../util/styleUtils";
 
+const TEXT_INPUT_HEIGHT = '1.1876em';
+
 const ChatContainer = styled(Box)({
     width: '100%',
     height: '100%',
@@ -22,7 +24,7 @@ const ChatContainer = styled(Box)({
 
 const ChatMessagesContainer = styled(Box)({
     width: '94%',
-    height: '64%',
+    height: `calc(85% - ${TEXT_INPUT_HEIGHT})`,
     display: 'flex',
     flexDirection: 'column-reverse',
     justifyContent: 'flex-start',
@@ -94,7 +96,7 @@ const ChatBox = ({ players }) => {
                 </ChatMessagesContainer>
                 <MessageInputContainer style={{ backgroundColor: '#222222' }}>
                     <TextField
-                        style={{ flexGrow: 1, alignContent: 'center' }}
+                        style={{ flexGrow: 1 }}
                         id="message-box"
                         placeholder="Message"
                         variant="outlined"

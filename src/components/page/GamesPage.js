@@ -44,7 +44,7 @@ const GamesPage = () => {
     })
 
     useEffect(() => {
-        if (playerDataState.playerId === null) {
+        if (playerDataState.playerId === null && !playerDataState.loading) {
             playerDataDispatch({ type: RESET_PLAYER_DATA });
             history.push("/")
         }
@@ -99,7 +99,7 @@ const GamesPage = () => {
     }
 
     const Games = () => {
-        if (gameDataState.loading || gameDataState.startUp) {
+        if (playerDataState.loading || gameDataState.loading || gameDataState.startUp) {
             return <Loading/>
         }
         return (
