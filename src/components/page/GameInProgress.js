@@ -192,7 +192,7 @@ const GameInProgress = () => {
     const TurnOptions = () => {
         if (currentTurn === playerTurn) return (
             <>
-                <NumSelectedCards ref={numSelectedCardsRef} rank={mapRank(currentRank)} />
+                <NumSelectedCards ref={numSelectedCardsRef} style={{ flexGrow: 1 }} rank={mapRank(currentRank)} />
                 <TurnButtonsContainer>
                     <Button style={{ marginRight: '1em' }} disabled={gameDetails.bs_called || gameDetails.first_turn} onClick={callBs}>Call BS!</Button>
                     <SubmitTurnButton ref={submitTurnButtonRef} onClick={useTurn} />
@@ -222,12 +222,12 @@ const GameInProgress = () => {
             {!gameDetails.is_winner && (
                 <CenterContainer>
                     {playerTurn === currentTurn && (
-                        <Typography>
+                        <Typography style={{ flexGrow: 1 }}>
                             <Box fontSize={'h5.fontSize'} fontWeight={'fontWeightBold'}>Your turn to play {currentCardDisplay}</Box>
                         </Typography>
                     )}
-                    <Typography variant={'h5'}>{lastTurnMessage()}</Typography>
-                    <Pile cards={pile} style={{ margin: '0.5em 0 0.5em 0' }} />
+                    <Typography variant={'h5'} style={{ flexGrow: 1 }}>{lastTurnMessage()}</Typography>
+                    <Pile cards={pile} style={{ flexGrow: 1 }} />
                     <TurnOptions />
                 </CenterContainer>
             )}
