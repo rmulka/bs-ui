@@ -60,7 +60,7 @@ const GamePlayersDisplay = ({ playerIdNumMap, playerOrder, playerCards, players,
     return (
         <Container>
             {playerDisplayOrder.map(uuid => (
-                <PlayerBox border={2} borderColor={grey[300]} borderRadius={16}>
+                <PlayerBox border={2} borderColor={grey[300]} borderRadius={16} key={uuid}>
                     <ColorTypography>
                         <Box fontSize={'h6.fontSize'} fontWeight={'fontWeightBold'}>
                             {players.find(player => player.id === uuid).name}
