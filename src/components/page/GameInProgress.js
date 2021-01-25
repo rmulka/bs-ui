@@ -41,7 +41,7 @@ const CenterContainer = styled(Box)({
     height: '40%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center'
 });
 
@@ -227,7 +227,7 @@ const GameInProgress = () => {
                         </Typography>
                     )}
                     <Typography variant={'h5'}>{lastTurnMessage()}</Typography>
-                    <Pile cards={pile} />
+                    <Pile cards={pile} style={{ margin: '0.5em 0 0.5em 0' }} />
                     <TurnOptions />
                 </CenterContainer>
             )}
