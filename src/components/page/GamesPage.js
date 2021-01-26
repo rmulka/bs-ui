@@ -99,21 +99,19 @@ const GamesPage = () => {
         )
     }
 
-    const Games = () => {
-        if (playerDataState.loading || gameDataState.loading || gameDataState.startUp) {
-            return <Loading/>
-        }
-        return (
-            <Container>
-                <GameCardsDisplay />
-                <ButtonContainer>
-                    <Button onClick={handleCreateClick}>Create Game</Button>
-                </ButtonContainer>
-            </Container>
-        )
+    if (playerDataState.loading || gameDataState.loading || gameDataState.startUp) {
+        return <Loading />
     }
 
-    return <Games />
+    return (
+        <Container>
+            <GameCardsDisplay />
+            <ButtonContainer>
+                <Button onClick={handleCreateClick}>Create Game</Button>
+            </ButtonContainer>
+        </Container>
+    )
+
 };
 
 export default GamesPage;
