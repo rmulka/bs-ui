@@ -68,8 +68,7 @@ const ChatBox = ({ players }) => {
 
     useEffect(() => {
         ws.subscribe(WsEndpoint.ChatTopic(gameId), (data) => {
-            const jsonData = JSON.parse(data.body);
-            setMessageState(jsonData);
+            setMessageState(JSON.parse(data.body));
         });
     }, [gameId, ws]);
 

@@ -7,6 +7,7 @@ import { WsEndpoint } from "../../constants/apiConstants";
 import GameDataContext from "../../context/GameDataContext";
 import PlayerDataContext from "../../context/PlayerDataContext";
 import LoadingDots from "../loading/LoadingDots";
+import Loading from "../loading/Loading";
 
 const Container = styled(Box)({
     width: '75%',
@@ -65,6 +66,8 @@ const Pregame = ({ players, gameId }) => {
     const startGame = (e) => {
         sendMessage(WsEndpoint.StartGameApp(gameId));
     }
+
+    if (gameDataState.loading) return <Loading />
 
     return (
         <Container>

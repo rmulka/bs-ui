@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import GameDataContext from "../../context/GameDataContext";
 import PlayerDataContext from "../../context/PlayerDataContext";
-import {GAME_STORAGE_KEY, JOIN_GAME, LOADING, RESET_GAME_DATA, UPDATE_ALL_GAMES} from "../../reducer/gameDataReducer";
+import { GAME_STORAGE_KEY, JOIN_GAME, LOADING, RESET_GAME_DATA, UPDATE_ALL_GAMES } from "../../reducer/gameDataReducer";
 import {PLAYER_STORAGE_KEY, RESET_PLAYER_DATA} from "../../reducer/playerDataReducer";
 import { fetchData, postData } from "../../util/apiHelper";
 import { RestApiEndpoint } from "../../constants/apiConstants";
@@ -61,15 +61,16 @@ const GamesPage = () => {
         }
 
         fetch();
-    }, [gameDataDispatch, history, playerDataDispatch, playerDataState.playerId]);
+    }, [gameDataDispatch, history, playerDataDispatch, playerDataState.loading, playerDataState.playerId]);
 
     const handleCreateClick = async (e) => {
+        gameDataDispatch({ type: LOADING });
         const gameData = await postData(RestApiEndpoint.Games, {}, playerDataState.playerId);
+        history.push(`/games/${gameData.data}`);
         const requestBody = { player_id: playerDataState.playerId, game_id: gameData.data };
         const results = await postData(RestApiEndpoint.PlayerGames, requestBody)
         if (!results.error && results.responseCode === 200) {
             gameDataDispatch({ type: JOIN_GAME, currentGameId: gameData.data });
-            history.push(`/games/${gameData.data}`)
         } else {
             gameDataDispatch({ type: RESET_GAME_DATA });
             history.push("/");
