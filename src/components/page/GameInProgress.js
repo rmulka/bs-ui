@@ -145,6 +145,7 @@ const GameInProgress = () => {
                 const currentTime = moment();
                 console.log(`current time: ${currentTime}`);
                 console.log(`timerUntil: ${timerUntil}`);
+                console.log(`diff: ${timerUntil.diff(currentTime)}`);
                 if (currentTime >= timerUntil) {
                     clearInterval(timer.current);
                     // send message to pick up pile
