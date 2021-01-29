@@ -146,8 +146,9 @@ const GameInProgress = () => {
                 if (currentTime >= timerUntil) {
                     clearInterval(timer.current);
                     // send message to pick up pile
+                    console.log("sending message");
                     if (playerDataState.playerId === gameDetails.player_number_id_map[currentTurn]) {
-                        console.log("sending message");
+                        console.log("here");
                         sendMessage(WsEndpoint.MissedTurnApp(gameId, playerDataState.playerId));
                     }
                 } else {
@@ -157,7 +158,7 @@ const GameInProgress = () => {
 
             return () => clearTimeout(timer.current);
         }
-    }, [currentTurn, gameDataState.currentGameData.timer_start, gameDetails.firstTurn, gameDetails.first_turn, gameDetails.is_winner, gameDetails.player_number_id_map, gameId, playerDataState.playerId, sendMessage])
+    }, [currentTurn, gameDataState.currentGameData.timer_start, gameDetails.first_turn, gameDetails.is_winner, gameDetails.player_number_id_map, gameId, playerDataState.playerId, sendMessage])
 
     const lastTurnMessage = () => {
         if (gameDetails.bs_called) {
