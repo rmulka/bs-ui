@@ -143,12 +143,12 @@ const GameInProgress = () => {
 
             timer.current = setInterval(() => {
                 const currentTime = moment();
+                console.log(`current time: ${currentTime}`);
+                console.log(`timerUntil: ${timerUntil}`);
                 if (currentTime >= timerUntil) {
-                    console.log("sending message");
                     clearInterval(timer.current);
                     // send message to pick up pile
                     if (playerDataState.playerId === gameDetails.player_number_id_map[currentTurn]) {
-                        console.log("here");
                         sendMessage(WsEndpoint.MissedTurnApp(gameId, playerDataState.playerId));
                     }
                 } else {
