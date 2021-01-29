@@ -139,11 +139,9 @@ const GameInProgress = () => {
 
     useEffect(() => {
         if (!gameDetails.first_turn && !gameDetails.is_winner) {
-            const timerUntil = moment(gameDataState.currentGameData.timer_start).add(2, 'minutes').add(2, 'seconds');
-
+            const timerUntil = moment.utc(gameDetails.timer_start).local().add(2, 'minutes').add(2, 'seconds');
             timer.current = setInterval(() => {
                 const currentTime = moment();
-                console.log(currentTime >= timerUntil);
                 if (currentTime >= timerUntil) {
                     clearInterval(timer.current);
                     // send message to pick up pile
@@ -157,7 +155,7 @@ const GameInProgress = () => {
 
             return () => clearTimeout(timer.current);
         }
-    }, [currentTurn, gameDataState.currentGameData.timer_start, gameDetails.first_turn, gameDetails.is_winner, gameDetails.player_number_id_map, gameId, playerDataState.playerId, sendMessage])
+    }, [currentTurn, gameDetails.first_turn, gameDetails.is_winner, gameDetails.player_number_id_map, gameDetails.timer_start, gameId, playerDataState.playerId, sendMessage])
 
     const lastTurnMessage = () => {
         if (gameDetails.bs_called) {
@@ -238,7 +236,7 @@ const GameInProgress = () => {
             <>
                 <NumSelectedCards ref={numSelectedCardsRef} rank={mapRank(currentRank)} />
                 <TurnButtonsContainer>
-                    <Button style={{ marginRight: '1em' }} disabled={gameDetails.bs_called || gameDetails.first_turn} onClick={callBs}>Call BS!</Button>
+                    <Button style={{ marginRight: '1em' }} disabled={gameDetails.bs_called || gameDetails.first_turn || gameDetails.num_cards_last_played === 0} onClick={callBs}>Call BS!</Button>
                     <SubmitTurnButton ref={submitTurnButtonRef} onClick={useTurn} />
                 </TurnButtonsContainer>
             </>
