@@ -21,5 +21,6 @@ export const WsEndpoint = {
     GameUpdateApp: (gameId) => `/app/game/turn/${gameId}`,
     GameBsApp: (gameId) => `/app/game/update/${gameId}/bs`,
     ChatApp: (gameId) => `/app/chat/${gameId}`,
-    ChatTopic: (gameId) => `/topic/chat/${gameId}`
+    ChatTopic: (gameId) => `/topic/chat/${gameId}`,
+    MissedTurnApp: (gameId, playerId) => `/app/game/miss/${gameId}/player/${playerId}`
 };

@@ -1,7 +1,8 @@
-import React, { useContext, useRef } from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import { useParams } from "react-router-dom";
-import { Typography, Box, Button, withStyles } from "@material-ui/core";
+import { Typography, Box, Button, withStyles, TextField } from "@material-ui/core";
 import { styled, makeStyles } from "@material-ui/core/styles";
+import moment from "moment";
 
 import GameDataContext from "../../context/GameDataContext";
 import PlayerDataContext from "../../context/PlayerDataContext";
@@ -13,7 +14,7 @@ import { WsEndpoint } from "../../constants/apiConstants";
 import SubmitTurnButton from "../general/SubmitTurnButton";
 import Pile from "../general/Pile";
 import GamePlayersDisplay from "../general/GamePlayersDisplay";
-import { red } from "@material-ui/core/colors";
+import { red, grey } from "@material-ui/core/colors";
 import LensIcon from '@material-ui/icons/Lens';
 import ChatBox from "../general/ChatBox";
 
@@ -79,6 +80,18 @@ const RedColorTypography = withStyles({
     }
 })(Typography);
 
+const TextFieldTimeDisplay = withStyles({
+    root: {
+        position: 'absolute',
+        bottom: '50%',
+        left: '10%',
+        "& .MuiInputBase-root.Mui-disabled": {
+            color: grey[50],
+            fontSize: 50
+        }
+    }
+})(TextField);
+
 const useStyles = makeStyles((theme) => ({
     container: {
         display: 'grid',
@@ -99,6 +112,8 @@ const GameInProgress = () => {
     const selectedCards = useRef({});
     const numSelectedCardsRef = useRef();
     const submitTurnButtonRef = useRef();
+    const timer = useRef(-1);
+    const timerDisplayRef = useRef();
 
     const gameDetails = gameDataState.currentGameData.details;
 
@@ -120,6 +135,28 @@ const GameInProgress = () => {
     const winnerId = gameDetails.winner_id;
     const winnerName = winnerId ? gameDataState.currentGameData.players.find(player => player.id === winnerId).name : '';
 
+    clearTimeout(timer.current);
+
+    useEffect(() => {
+        if (!gameDetails.first_turn && !gameDetails.is_winner) {
+            const timerUntil = moment(gameDataState.currentGameData.timer_start).add(2, 'minutes').add(2, 'seconds');
+
+            timer.current = setInterval(() => {
+                const currentTime = moment();
+                if (currentTime >= timerUntil) {
+                    clearInterval(timer.current);
+                    // send message to pick up pile
+                    if (playerDataState.playerId === gameDetails.player_number_id_map[currentTurn]) {
+                        sendMessage(WsEndpoint.MissedTurnApp(gameId, playerDataState.playerId));
+                    }
+                } else {
+                    timerDisplayRef.current.value = moment(timerUntil.diff(currentTime)).format('m:ss');
+                }
+            }, 1000);
+
+            return () => clearTimeout(timer.current);
+        }
+    }, [currentTurn, gameDataState.currentGameData.timer_start, gameDetails.firstTurn, gameDetails.first_turn, gameDetails.is_winner, gameDetails.player_number_id_map, gameId, playerDataState.playerId, sendMessage])
 
     const lastTurnMessage = () => {
         if (gameDetails.bs_called) {
@@ -130,6 +167,10 @@ const GameInProgress = () => {
             if (gameDetails.is_bs) return (youCalledBs ? 'You' : nameThatCalled) + ' called ' + (youGotBs ? 'your' : `${nameThatGotCalled}'s`) + ' BS!';
             else return (youCalledBs ? 'You' : nameThatCalled) + ' called BS on ' + (youGotBs ? 'you' : nameThatGotCalled) +
                 ' and ' + (youCalledBs ? 'were' : 'was') + ' wrong!';
+        }
+        else if (gameDetails.num_cards_last_played === 0 && !gameDetails.first_turn) {
+            const yourTurn = playerDataState.playerId === prevTurnUuid;
+            return (yourTurn ? 'You' : prevTurnPlayer.name) + ' missed ' + (yourTurn ? 'your' : 'their') + ' turn :(';
         }
         else if (pile.length > 0) {
             const prevPlayerName = playerDataState.playerId === prevTurnUuid ? 'You' : prevTurnPlayer.name;
@@ -217,6 +258,12 @@ const GameInProgress = () => {
                 players={gameDataState.currentGameData.players}
                 currentTurn={currentTurn}
                 currentMappedRank={mapRank(currentRank)}
+            />
+            <TextFieldTimeDisplay
+                InputProps={{ disableUnderline: true }}
+                disabled
+                variant={'standard'}
+                inputRef={timerDisplayRef}
             />
             <ChatBoxContainer>
                 <ChatBox players={gameDataState.currentGameData.players} />
